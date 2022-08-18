@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+const {check, validationResult} = require('express-validator')//destructures express validator to get the bits we want
 
 // List of Fruits
 let fruits = [
@@ -32,7 +32,11 @@ router.get('/:num', (req,res)=>{
 })
 
 //add a fuit
-router.post('/',(req,res)=>{
+router.post('/',[check("color").not().trim().isEmpty()],(req,res)=>{
+    const errors = validationResult(req)   //checks the request object for errors and assigns them to a variable of 'errors'
+    if (!errors.isEmpty()){   //confirms if there is something in the etrrors
+        return res.status(400).send({error: errors.array()})
+    }
     fruits.push(req.body)
     res.send(fruits)
 })

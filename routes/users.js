@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+const {check, validationResult} = require('express-validator')//destructures express validator to get the bits we want
 
 
 // List of Users
@@ -34,8 +34,12 @@ router.get('/:num', (req,res)=>{
     res.send(users[req.params.num -1])
 })
 
-//add a user
-router.post('/',(req,res)=>{
+//add a user - validated to make sure incoming data accurate
+router.post('/', [check("name").not().trim().isEmpty()] ,(req,res)=>{   //validation check that it is 'not' 'empty' and trims white space
+    const errors = validationResult(req)   //checks the request object for errors and assigns them to a variable of 'errors'
+    if (!errors.isEmpty()){   //confirms if there is something in the etrrors
+        return res.status(400).send({error: errors.array()})
+    }
     users.push(req.body)
     res.send(users)
 })
