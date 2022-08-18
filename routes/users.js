@@ -34,4 +34,22 @@ router.get('/:num', (req,res)=>{
     res.send(users[req.params.num -1])
 })
 
+//add a user
+router.post('/',(req,res)=>{
+    users.push(req.body)
+    res.send(users)
+})
+
+// delete a user
+router.delete('/:num',(req,res)=>{
+users.splice((req.params.num-1),1)
+res.send(users)
+})
+
+// update a user
+router.put('/:num', (req,res)=>{
+users[req.params.num-1].name = 'Fred'
+res.send(users)
+})
+
 module.exports = router
